@@ -1,17 +1,20 @@
 import 'package:bible_app/components/componets.dart';
+import 'package:bible_app/constants/constants.dart';
 import 'package:bible_app/utils/utils.dart';
 import 'package:bible_app/view/about_us_screen/info_card.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AboutUsScreen extends StatelessWidget {
   const AboutUsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(title: "About Us"),
-      body: const BodyContainerComponent(child: AboutPage()),
-    );
+    return Obx(() => Scaffold(
+          backgroundColor: AppColors.getScaffoldBgColor(),
+          appBar: CustomAppBar(title: "About Us"),
+          body: const BodyContainerComponent(child: AboutPage()),
+        ));
   }
 }
 

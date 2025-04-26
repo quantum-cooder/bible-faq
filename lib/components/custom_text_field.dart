@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CustomTextField extends StatelessWidget {
-  const CustomTextField({
+  CustomTextField({
     super.key,
     this.hintText = "Search",
     this.prefixIcon = const Icon(Icons.search),
@@ -18,61 +18,63 @@ class CustomTextField extends StatelessWidget {
   final Widget prefixIcon;
   final int maxLines;
   final double height;
-  final isFavQuestionSearchBar;
+  final bool isFavQuestionSearchBar;
+  final ThemeController themeController = Get.find<ThemeController>();
   @override
   Widget build(BuildContext context) {
-    
-  final  dbController = Get.find<QuestionsProviderSql>();
-    final ThemeController themeController = Get.find();
+    final dbController = Get.find<QuestionsProviderSql>();
     dbController.allQuestions;
-    return Obx(
-      () {
-        bool isDarkMode = themeController.isDarkMode.value;
 
-        return Container(
-          decoration: BoxDecoration(
-            color: isDarkMode ? AppColors.lightBlack : AppColors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              isDarkMode
-                  ? const BoxShadow()
-                  : BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      offset: const Offset(-2, 2),
-                      blurRadius: 4,
-                      spreadRadius: 1,
-                    ),
-            ],
-          ),
-          child: SizedBox(
-            height: height,
-            child: TextField(
-              onTap: () {
-               isFavQuestionSearchBar? Get.toNamed(AppRouts.favQuestionSearchScreen):Get.toNamed(AppRouts.searchQusetionScreen);
-              },
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: AppColors.transparent,
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 13,
-                ),
-                hintText: hintText,
-                prefixIcon: prefixIcon,
-                border: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-              ),
-              maxLines: maxLines,
-              onChanged: (value) {
-                // Get.toNamed(AppRouts.searchQusetionScreen);
-           
-              },
+    return Card(
+      elevation: 4,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      shadowColor: Theme.of(context).brightness == Brightness.dark
+          ? Colors.transparent
+          : Colors.grey.withAlpha(128),
+      child: SizedBox(
+        height: height,
+        child: TextFormField(
+          onTap: () {
+            isFavQuestionSearchBar
+                ? Get.toNamed(AppRouts.favQuestionSearchScreen)
+                : Get.toNamed(AppRouts.searchQusetionScreen);
+          },
+          decoration: InputDecoration(
+            hintText: hintText,
+            prefixIcon: prefixIcon,
+            filled: true,
+            fillColor: themeController.isDarkMode.value
+                ? AppColors.lightBlack
+                : AppColors.white,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
             ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            hintStyle: context.theme.inputDecorationTheme.hintStyle,
+            contentPadding: const EdgeInsets.symmetric(vertical: 13),
           ),
-        );
-      },
+          maxLines: maxLines,
+        ),
+      ),
     );
   }
 }

@@ -10,11 +10,16 @@ import 'package:get/get.dart';
 class TopicTileComponent extends StatelessWidget {
   final Topic topic;
 
-  const TopicTileComponent({super.key, required this.topic});
-
+  const TopicTileComponent({
+    super.key,
+    required this.topic,
+    required this.tileBgColor,
+  });
+  final Color tileBgColor;
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: tileBgColor,
       margin: const EdgeInsets.symmetric(vertical: 4.0),
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -23,6 +28,7 @@ class TopicTileComponent extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: ListTile(
+          tileColor: Colors.transparent,
           contentPadding: EdgeInsets.zero,
           leading: SizedBox(
             width: 80,

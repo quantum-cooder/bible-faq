@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:bible_app/components/componets.dart';
 import 'package:bible_app/constants/constants.dart';
 import 'package:bible_app/utils/utils.dart';
+import 'package:bible_app/view_model/controllers/theme_controller.dart';
 import 'package:bible_app/view_model/question_provider/question_provider_sql.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,7 +14,7 @@ class LatestQuestionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Get.find<QuestionsProviderSql>();
-
+    final themeController = Get.find<ThemeController>();
     return Obx(() {
       if (provider.isLatestQuestionsLoading.value) {
         return const Center(child: CircularProgressIndicator.adaptive());
@@ -54,17 +55,23 @@ class LatestQuestionSection extends StatelessWidget {
             itemBuilder: (context, index) {
               final question = questions[index];
               return GestureDetector(
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Image.asset(
-                            "${AppImages.initialPath}${question.image}"),
-                        title: TitleText(
-                          text:
-                              cleanQuestion(question.question ?? 'No Question'),
-                          fontSize: AppFontSize.xsmall,
+                  child: Obx(
+                    () => Card(
+                      color: themeController.isDarkMode.value
+                          ? AppColors.lightBlack
+                          : AppColors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: ListTile(
+                          tileColor: Colors.transparent,
+                          contentPadding: EdgeInsets.zero,
+                          leading: Image.asset(
+                              "${AppImages.initialPath}${question.image}"),
+                          title: TitleText(
+                            text: cleanQuestion(
+                                question.question ?? 'No Question'),
+                            fontSize: AppFontSize.xsmall,
+                          ),
                         ),
                       ),
                     ),

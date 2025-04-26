@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 
 class ExploreResourcesSection extends StatelessWidget {
   const ExploreResourcesSection({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Column(

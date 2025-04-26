@@ -1,4 +1,3 @@
-export 'app_dark_theme.dart';
 export 'body_container_component.dart';
 export 'custom_app_bar.dart';
 export 'custom_gradient_button.dart';

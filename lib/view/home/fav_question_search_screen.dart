@@ -3,30 +3,30 @@ import 'package:bible_app/components/last_read_time.dart';
 import 'package:bible_app/constants/constants.dart';
 import 'package:bible_app/data/model/question.dart';
 import 'package:bible_app/services/sqlite_services/db_services.dart';
-import 'package:bible_app/view_model/controllers/controllers.dart';
-import 'package:bible_app/view_model/question_provider/question_provider_sql.dart';
+import 'package:bible_app/view_model/controllers/favorites_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
-class SearchQuestionsScreen extends StatefulWidget {
-  const SearchQuestionsScreen({super.key});
+class FavQuestionSearchScreen extends StatefulWidget {
+  const FavQuestionSearchScreen({super.key});
 
   @override
-  SearchQuestionsScreenState createState() => SearchQuestionsScreenState();
+  _FavQuestionSearchScreenState createState() =>
+      _FavQuestionSearchScreenState();
 }
 
-class SearchQuestionsScreenState extends State<SearchQuestionsScreen> {
-  final dbController = Get.find<QuestionsProviderSql>();
+class _FavQuestionSearchScreenState extends State<FavQuestionSearchScreen> {
+  final FavoritesProvider favoritesProvider = Get.find<FavoritesProvider>();
   late List<QuestionData> questions;
   late List<QuestionData> filteredQuestions;
   final TextEditingController _searchController = TextEditingController();
-  final ThemeController themeController = Get.find<ThemeController>();
+
   final QuestionsRepository _repository = QuestionsRepository.instance;
   @override
   void initState() {
     super.initState();
-    questions = dbController.allQuestions; // Get all questions
+    questions = favoritesProvider.favoriteQuestions; // Get all questions
     filteredQuestions =
         questions; // Initialize filtered list with all questions
 
@@ -65,7 +65,7 @@ class SearchQuestionsScreenState extends State<SearchQuestionsScreen> {
       () => Scaffold(
         backgroundColor: AppColors.getScaffoldBgColor(),
         appBar: CustomAppBar(
-          title: "Search Questions",
+          title: "Search Favourite Questions",
           isShowSettingTrailing: true,
         ),
         body: BodyContainerComponent(
@@ -74,32 +74,11 @@ class SearchQuestionsScreenState extends State<SearchQuestionsScreen> {
               // Search Bar
               TextField(
                 controller: _searchController,
-                autofocus: true,
                 decoration: InputDecoration(
                   hintText: "Search questions...",
                   prefixIcon: const Icon(Icons.search),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  filled: true,
-                  fillColor: themeController.isDarkMode.value
-                      ? AppColors.lightBlack
-                      : AppColors.white,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide.none,
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ),
@@ -113,15 +92,9 @@ class SearchQuestionsScreenState extends State<SearchQuestionsScreen> {
                     final question = filteredQuestions[index];
                     return GestureDetector(
                       child: Card(
-                        color: themeController.isDarkMode.value
-                            ? AppColors.lightBlack
-                            : AppColors.white,
                         child: Padding(
                           padding: const EdgeInsets.all(8),
                           child: ListTile(
-                            tileColor: themeController.isDarkMode.value
-                                ? AppColors.lightBlack
-                                : AppColors.white,
                             contentPadding: const EdgeInsets.all(0),
                             leading: Image.asset(
                                 "${AppImages.initialPath}${question.image}"),

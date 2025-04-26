@@ -10,80 +10,87 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
+import '../view_model/controllers/theme_controller.dart';
+
 class LatestQuestionScreen extends StatelessWidget {
   LatestQuestionScreen({super.key});
 
   final QuestionsProviderSql provider = Get.put(QuestionsProviderSql());
 
   final QuestionsRepository _repository = QuestionsRepository.instance;
+  final themeProvider = Get.find<ThemeController>();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: "Latest Questions",
-        isShowSettingTrailing: true,
-      ),
-      body: Obx(() {
-        if (provider.isLatestQuestionsLoading.value) {
-          return const Center(child: CircularProgressIndicator.adaptive());
-        }
-        if (provider.isLatestQuestionsError.value) {
-          return const Center(
-            child: Text(
-              "Failed to load latest questions",
-              style: TextStyle(color: Colors.red, fontSize: 16),
-            ),
-          );
-        }
-
-        final questions = provider.latestQuestions;
-
-        // Debug log to trace the questions being displayed
-        log("Displaying latest questions: ${questions.length}");
-
-        return BodyContainerComponent(
-          child: Column(
-            children: [
-              const CustomTextField(),
-              const Gap(10),
-              Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: questions.length,
-                  itemBuilder: (context, index) {
-                    final question = questions[index];
-                    return Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.all(0),
-                          leading: Image.asset(
-                            "${AppImages.initialPath}${question.image}",
-                          ), // Replace with question.imagePath if applicable
-                          title: TitleText(
-                            text: cleanQuestion(
-                                question.question ?? 'No text available'),
-                            fontSize: AppFontSize.xsmall,
-                          ),
-                          subtitle: LastReadTime(
-                              repository: _repository, question: question),
-                          onTap: () {
-                            // Navigate to QuestionDetailScreen with the selected question as an argument
-                            Get.toNamed(
-                              AppRouts.questionDetailScreen,
-                              arguments: [question, false],
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
+    return Obx(() => Scaffold(
+          backgroundColor: AppColors.getScaffoldBgColor(),
+          appBar: CustomAppBar(
+            title: "Latest Questions",
+            isShowSettingTrailing: true,
           ),
-        );
-      }),
-    );
+          body: Obx(() {
+            if (provider.isLatestQuestionsLoading.value) {
+              return const Center(child: CircularProgressIndicator.adaptive());
+            }
+            if (provider.isLatestQuestionsError.value) {
+              return const Center(
+                child: Text(
+                  "Failed to load latest questions",
+                  style: TextStyle(color: Colors.red, fontSize: 16),
+                ),
+              );
+            }
+
+            final questions = provider.latestQuestions;
+
+            // Debug log to trace the questions being displayed
+            log("Displaying latest questions: ${questions.length}");
+
+            return BodyContainerComponent(
+              child: Column(
+                children: [
+                   CustomTextField(),
+                  const Gap(10),
+                  Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      itemCount: questions.length,
+                      itemBuilder: (context, index) {
+                        final question = questions[index];
+                        return Card(
+                          color: themeProvider.isDarkMode.value
+                              ? AppColors.lightBlack
+                              : AppColors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: ListTile(
+                              contentPadding: const EdgeInsets.all(0),
+                              leading: Image.asset(
+                                "${AppImages.initialPath}${question.image}",
+                              ), // Replace with question.imagePath if applicable
+                              title: TitleText(
+                                text: cleanQuestion(
+                                    question.question ?? 'No text available'),
+                                fontSize: AppFontSize.xsmall,
+                              ),
+                              subtitle: LastReadTime(
+                                  repository: _repository, question: question),
+                              onTap: () {
+                                // Navigate to QuestionDetailScreen with the selected question as an argument
+                                Get.toNamed(
+                                  AppRouts.questionDetailScreen,
+                                  arguments: [question, false],
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+        ));
   }
 }

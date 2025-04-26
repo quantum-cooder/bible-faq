@@ -1,5 +1,6 @@
 import 'package:bible_app/components/componets.dart';
 import 'package:bible_app/constants/constants.dart';
+import 'package:bible_app/view_model/controllers/theme_controller.dart';
 import 'package:bible_app/view_model/question_provider/question_provider_sql.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -8,6 +9,7 @@ import 'package:get/get.dart';
 class AllBilbeQuestionAndAnswerCard extends StatelessWidget {
   AllBilbeQuestionAndAnswerCard({super.key});
   final QuestionsProviderSql controller = Get.find();
+  final ThemeController themeController = Get.find<ThemeController>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -15,11 +17,16 @@ class AllBilbeQuestionAndAnswerCard extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        gradient: const LinearGradient(
-          colors: [
-            AppColors.tealBlue,
-            AppColors.aquaBlue,
-          ],
+        gradient: LinearGradient(
+          colors: !themeController.isDarkMode.value
+              ? [
+                  AppColors.tealBlue,
+                  AppColors.aquaBlue,
+                ]
+              : [
+                  AppColors.lightBlack,
+                  AppColors.darkGray,
+                ],
         ),
       ),
       child: Padding(

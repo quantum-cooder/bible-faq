@@ -9,4 +9,4 @@ export 'news_and_resources_screen.dart';
 export 'search_questions_screen.dart';
 export 'setting_screen.dart';
 export 'splash_screen.dart';
-export 'topics_screen.dart';
+export 'individual_topic_screen.dart';

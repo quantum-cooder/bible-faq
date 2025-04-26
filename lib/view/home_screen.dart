@@ -1,12 +1,10 @@
-import 'package:bible_app/constants/constants.dart';
+import 'package:bible_app/constants/app_colors.dart';
 import 'package:bible_app/utils/local_storage_util.dart';
 import 'package:bible_app/view/dialogs/download_dialog.dart';
-import 'package:bible_app/view/home_screen/home_screen.dart';
-import 'package:bible_app/view_model/controllers/controllers.dart';
+import 'package:bible_app/view/home/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -64,35 +62,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeController themeController = Get.find();
-    return Obx(() {
-      bool isDarkMode = themeController.isDarkMode.value;
-      return Scaffold(
-        backgroundColor: isDarkMode ? AppColors.black : AppColors.whiteBlue,
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Gap(25),
-                SizedBox(
-                  height: Get.height * 0.10,
-                  child: SearchAndSettingsRow(isDarkMode: isDarkMode),
-                ),
-                const Gap(12),
-                AllBilbeQuestionAndAnswerCard(),
-                const Gap(12),
-                const ExploreResourcesSection(),
-                const Gap(12),
-                const LatestQuestionSection(),
-                const Gap(15),
-                BibleTopicsSection(),
-              ],
-            ),
+    final scaffoldColor = Theme.of(context).brightness == Brightness.light
+        ? AppColors.scaffoldLightColor
+        : AppColors.scaffoldDarkColor;
+
+    return Scaffold(
+      backgroundColor: scaffoldColor,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Gap(50),
+              SearchAndSettingsRow(),
+              const Gap(12),
+              AllBilbeQuestionAndAnswerCard(),
+              const Gap(12),
+              const ExploreResourcesSection(),
+              const Gap(12),
+              const LatestQuestionSection(),
+              const Gap(15),
+              BibleTopicsSectionForHome(),
+            ],
           ),
         ),
-      );
-    });
+      ),
+    );
   }
 }

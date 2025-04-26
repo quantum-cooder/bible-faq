@@ -4,6 +4,7 @@ import 'package:bible_app/components/last_read_time.dart';
 import 'package:bible_app/constants/constants.dart';
 import 'package:bible_app/services/sqlite_services/db_services.dart';
 import 'package:bible_app/utils/utils.dart';
+import 'package:bible_app/view_model/controllers/theme_controller.dart';
 import 'package:bible_app/view_model/question_provider/question_provider_sql.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,10 +16,11 @@ class AllBilbeQuestionAndAnswerScreen extends StatelessWidget {
   final QuestionsRepository _repository = QuestionsRepository.instance;
 
   static final RxBool showLatestQuestions = false.obs; // Filter state
-
+  final ThemeController themeProvider = Get.find<ThemeController>();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Obx(() => Scaffold(
+        backgroundColor: AppColors.getScaffoldBgColor(),
         appBar: CustomAppBarForFilter(
           title: "All Bible Questions \nand Answers",
           isShowSettingTrailing: true,
@@ -65,7 +67,7 @@ class AllBilbeQuestionAndAnswerScreen extends StatelessWidget {
 
           return Column(
             children: [
-              const CustomTextField(hintText: "Search"),
+              CustomTextField(hintText: "Search"),
               const SizedBox(height: 16),
               Expanded(
                 child: Obx(() {
@@ -76,11 +78,15 @@ class AllBilbeQuestionAndAnswerScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final question = questions[index];
                       return Card(
+                        color: themeProvider.isDarkMode.value
+                            ? AppColors.lightBlack
+                            : AppColors.white,
                         elevation: 2,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: ListTile(
+                          tileColor: Colors.transparent,
                           contentPadding: const EdgeInsets.symmetric(
                             vertical: 8,
                             horizontal: 16,
@@ -115,7 +121,7 @@ class AllBilbeQuestionAndAnswerScreen extends StatelessWidget {
               ),
             ],
           );
-        })));
+        }))));
   }
 
   void showSortOptions(BuildContext context, RxString sortOrder,

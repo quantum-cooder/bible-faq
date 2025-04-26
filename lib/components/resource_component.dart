@@ -1,4 +1,5 @@
 import 'package:bible_app/components/componets.dart';
+import 'package:bible_app/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -16,7 +17,6 @@ class ResourceComponent extends StatelessWidget {
   final double width;
   final String title;
   final String subTitle;
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -24,6 +24,9 @@ class ResourceComponent extends StatelessWidget {
       child: GestureDetector(
         onTap: ontap,
         child: Card(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.lightBlack
+              : AppColors.white,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -31,10 +34,13 @@ class ResourceComponent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
-                  child: Image.asset(
-                    image,
-                    height: 150,
-                    fit: BoxFit.cover,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      image,
+                      height: 150,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 const Gap(8),

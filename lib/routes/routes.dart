@@ -2,7 +2,7 @@ import 'package:bible_app/constants/app_routs.dart';
 import 'package:bible_app/view/ask_a_question_screen.dart';
 import 'package:bible_app/view/ask_question_screen.dart';
 import 'package:bible_app/view/free_bible_guide_screen.dart';
-import 'package:bible_app/view/home_screen/fav_question_search_screen.dart';
+import 'package:bible_app/view/home/fav_question_search_screen.dart';
 import 'package:bible_app/view/question_details_screen.dart';
 import 'package:bible_app/view/view.dart';
 import 'package:get/get.dart';
@@ -19,7 +19,7 @@ class Routes {
         ),
         GetPage(
           name: AppRouts.settingScreen,
-          page: () => const SettingScreen(),
+          page: () => SettingScreen(),
         ),
         GetPage(
           name: AppRouts.allBibleQuestionAnswerScreen,
@@ -47,7 +47,7 @@ class Routes {
         ),
         GetPage(
           name: AppRouts.topicScreen,
-          page: () => TopicsScreen(),
+          page: () => IndividualTopicScreen(),
         ),
         GetPage(
           name: AppRouts.questionDetailScreen,

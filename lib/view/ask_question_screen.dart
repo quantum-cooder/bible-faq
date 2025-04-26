@@ -12,62 +12,63 @@ class AskQuestionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar:  CustomAppBar(
-        title: "Ask a Question",
-      ),
-      body: BodyContainerComponent(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const InfoSection(),
-              const CustomTextField(),
-              const Gap(6),
-              SizedBox(
-                height: Get.height * 0.6,
-                child: QuestionSection(),
-              ),
-              const Gap(10),
-              const TitleText(text: "Have a Bible Question?"),
-              const LabelText(
-                text:
-                    "Do you have a question about the Bible or need spiritual guidance? ",
-                textColor: AppColors.lightGray,
-              ),
-              const Gap(10),
-              const LabelText(
-                text:
-                    "We're here to help! Submit your question, and our team will respond with insights from the Scriptures.",
-                textColor: AppColors.lightGray,
-              ),
-              const LabelText(
-                text:
-                    "Our dedicated team will get back to you within a few days.",
-                textColor: AppColors.lightGray,
-              ),
-              const Gap(10),
-              CustomTextField(
-                hintText: "Enter your full name...",
-                prefixIcon: svgImage(AppSvgIcons.user),
-              ),
-              const Gap(10),
-              CustomTextField(
-                hintText: "Your email address...",
-                prefixIcon: svgImage(AppSvgIcons.mail),
-              ),
-              const Gap(10),
-              CustomTextField(
-                hintText: "Please write your question...",
-                prefixIcon: svgImage(AppSvgIcons.messageMultiple),
-              ),
-              const Gap(10),
-              CustomGradientButton(text: "Submit", onTap: () {})
-            ],
+    return Obx(() => Scaffold(
+          backgroundColor: AppColors.getScaffoldBgColor(),
+          appBar: CustomAppBar(
+            title: "Ask a Question",
           ),
-        ),
-      ),
-    );
+          body: BodyContainerComponent(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const InfoSection(),
+                   CustomTextField(),
+                  const Gap(6),
+                  SizedBox(
+                    height: Get.height * 0.6,
+                    child: QuestionSection(),
+                  ),
+                  const Gap(10),
+                  const TitleText(text: "Have a Bible Question?"),
+                  const LabelText(
+                    text:
+                        "Do you have a question about the Bible or need spiritual guidance? ",
+                    textColor: AppColors.lightGray,
+                  ),
+                  const Gap(10),
+                  const LabelText(
+                    text:
+                        "We're here to help! Submit your question, and our team will respond with insights from the Scriptures.",
+                    textColor: AppColors.lightGray,
+                  ),
+                  const LabelText(
+                    text:
+                        "Our dedicated team will get back to you within a few days.",
+                    textColor: AppColors.lightGray,
+                  ),
+                  const Gap(10),
+                  CustomTextField(
+                    hintText: "Enter your full name...",
+                    prefixIcon: svgImage(AppSvgIcons.user),
+                  ),
+                  const Gap(10),
+                  CustomTextField(
+                    hintText: "Your email address...",
+                    prefixIcon: svgImage(AppSvgIcons.mail),
+                  ),
+                  const Gap(10),
+                  CustomTextField(
+                    hintText: "Please write your question...",
+                    prefixIcon: svgImage(AppSvgIcons.messageMultiple),
+                  ),
+                  const Gap(10),
+                  CustomGradientButton(text: "Submit", onTap: () {})
+                ],
+              ),
+            ),
+          ),
+        ));
   }
 
   Widget svgImage(String image) => SvgPicture.asset(
@@ -167,13 +168,12 @@ class QuestionSection extends StatelessWidget {
   QuestionSection({super.key});
 
   // final List<Question> questions = QuestionRepository.fetchLatestQuestions();
-  
-  final  dbController = Get.find<QuestionsProviderSql>();
+
+  final dbController = Get.find<QuestionsProviderSql>();
 
   @override
   Widget build(BuildContext context) {
-    
-        final questions = dbController.allQuestions;
+    final questions = dbController.allQuestions;
     return ListView.builder(
       padding: EdgeInsets.zero,
       itemCount: questions.length,
@@ -186,7 +186,7 @@ class QuestionSection extends StatelessWidget {
               contentPadding: const EdgeInsets.all(0),
               leading: Image.asset("${AppImages.initialPath}${question.image}"),
               title: TitleText(
-                text: question.question??"",
+                text: question.question ?? "",
                 fontSize: AppFontSize.xsmall,
               ),
             ),

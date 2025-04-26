@@ -1,18 +1,19 @@
 import 'package:bible_app/components/componets.dart';
-import 'package:bible_app/constants/app_images.dart';
-import 'package:bible_app/constants/app_routs.dart';
+import 'package:bible_app/constants/constants.dart';
 import 'package:bible_app/data/model/category_question.dart';
 import 'package:bible_app/model/topic.dart';
+import 'package:bible_app/view_model/controllers/controllers.dart';
 import 'package:bible_app/view_model/question_provider/question_provider_sql.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class BibleTopicsSection extends StatelessWidget {
-  BibleTopicsSection({super.key});
+class BibleTopicsSectionForHome extends StatelessWidget {
+  BibleTopicsSectionForHome({super.key});
 
   // final QuestionsProviderSql provider = Get.put(QuestionsProviderSql());  //// we used put only 1 time in main.dart, so we use Get.find() to get the instance of QuestionsProviderSql
 
   final provider = Get.find<QuestionsProviderSql>();
+  final ThemeController themeController = Get.find<ThemeController>();
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -53,6 +54,9 @@ class BibleTopicsSection extends StatelessWidget {
             itemBuilder: (context, index) {
               final topic = topics[index];
               return TopicTileComponent(
+                tileBgColor: themeController.isDarkMode.value
+                    ? AppColors.lightBlack
+                    : AppColors.white,
                 topic: Topic(
                   catId: topic.catId,
                   title: topic.name ?? 'Unnamed Topic',

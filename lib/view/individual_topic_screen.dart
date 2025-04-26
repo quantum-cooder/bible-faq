@@ -1,0 +1,82 @@
+import 'package:bible_app/components/componets.dart';
+import 'package:bible_app/components/last_read_time.dart';
+import 'package:bible_app/constants/constants.dart';
+import 'package:bible_app/model/topic.dart';
+import 'package:bible_app/services/sqlite_services/db_services.dart';
+import 'package:bible_app/utils/utils.dart';
+import 'package:bible_app/view_model/controllers/theme_controller.dart';
+import 'package:bible_app/view_model/question_provider/question_provider_sql.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class IndividualTopicScreen extends StatelessWidget {
+  final provider = Get.find<QuestionsProviderSql>();
+  IndividualTopicScreen({super.key});
+  final QuestionsRepository _repository = QuestionsRepository.instance;
+  final ThemeController themeController = Get.find<ThemeController>();
+  @override
+  Widget build(BuildContext context) {
+    final Topic topic = Get.arguments;
+
+    provider.fetchQuestionsByCategory(topic.catId ?? 0);
+
+    return Obx(
+      () => Scaffold(
+          backgroundColor: AppColors.getScaffoldBgColor(),
+          appBar: CustomAppBar(
+            title: topic.title,
+            isShowSettingTrailing: true,
+            isShowInternetTrailing: true,
+            isShowToicLength: true,
+            topicLength: topic.count.toString(),
+          ),
+          body: BodyContainerComponent(
+            child: Obx(() {
+              if (provider.isAllQuestionsLoading.value) {
+                return const Center(
+                    child: CircularProgressIndicator.adaptive());
+              }
+
+              final questions = provider.filteredQuestions;
+
+              if (questions.isEmpty) {
+                return const Center(
+                  child: Text(
+                    "No Topics available for this category.",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                );
+              }
+
+              return ListView.builder(
+                padding: const EdgeInsets.all(8.0),
+                itemCount: questions.length,
+                itemBuilder: (context, index) {
+                  final question = questions[index];
+                  return Card(
+                    color: themeController.isDarkMode.value
+                        ? AppColors.lightBlack
+                        : AppColors.white,
+                    child: ListTile(
+                      leading: Image.asset(
+                        "${AppImages.initialPath}${question.image}",
+                      ),
+                      title: Text(cleanQuestion(
+                          question.question ?? "No Question Text")),
+                      subtitle: LastReadTime(
+                          repository: _repository, question: question),
+                      onTap: () {
+                        Get.toNamed(
+                          AppRouts.questionDetailScreen,
+                          arguments: [question, true],
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            }),
+          )),
+    );
+  }
+}

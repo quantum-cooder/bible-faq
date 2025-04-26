@@ -1,12 +1,9 @@
-import 'package:bible_app/components/app_light_theme.dart';
-import 'package:bible_app/components/componets.dart';
+import 'package:bible_app/components/app_theme.dart';
 import 'package:bible_app/constants/constants.dart';
 import 'package:bible_app/routes/routes.dart';
 import 'package:bible_app/view_model/controllers/controllers.dart';
 import 'package:bible_app/view_model/font_size_provider.dart';
 import 'package:bible_app/view_model/question_provider/question_provider_sql.dart';
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,14 +14,9 @@ void main() {
   Get.put(ThemeController());
   Get.put(QuestionsProviderSql());
   Get.put(FontSizeController());
+  Get.put(AppInfoController());
 
-  // Use the recommended approach instead of window
-  runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => const BibleFAQ(),
-    ),
-  );
+  runApp(const BibleFAQ());
 }
 
 class BibleFAQ extends StatelessWidget {

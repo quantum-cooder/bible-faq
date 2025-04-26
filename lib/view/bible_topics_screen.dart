@@ -1,8 +1,10 @@
 import 'package:bible_app/components/componets.dart';
+import 'package:bible_app/constants/app_colors.dart';
 import 'package:bible_app/constants/app_images.dart';
 import 'package:bible_app/data/model/category_question.dart';
 import 'package:bible_app/data/model/question_category.dart';
 import 'package:bible_app/model/topic.dart';
+import 'package:bible_app/view_model/controllers/theme_controller.dart';
 import 'package:bible_app/view_model/question_provider/question_provider_sql.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -20,6 +22,8 @@ class _BibleTopicsScreenState extends State<BibleTopicsScreen> {
   // late List<QuestionCategory> topics;
   late List<QuestionCategory> filteredQuestions;
   final TextEditingController _searchController = TextEditingController();
+  final ThemeController themeController = Get.find<ThemeController>();
+
   @override
   void initState() {
     super.initState();
@@ -64,74 +68,79 @@ class _BibleTopicsScreenState extends State<BibleTopicsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: "Bible Topics",
-        isShowSettingTrailing: true,
-        isShowInternetTrailing: true,
-      ),
-      // appBar: CustomAppBarTopics(title: title),
-      body: BodyContainerComponent(
-        child: Column(
-          children: [
-            // TextField(
-            //   controller: _searchController,
-            //   decoration: InputDecoration(
-            //     hintText: "Search questions...",
-            //     prefixIcon: const Icon(Icons.search),
-            //     border: OutlineInputBorder(
-            //       borderRadius: BorderRadius.circular(15),
-            //     ),
-            //   ),
-            // ),
-            const Gap(10),
-            Expanded(
-              child: Obx(() {
-                if (provider.isCategoriesLoading.value) {
-                  return const Center(
-                      child: CircularProgressIndicator.adaptive());
-                }
-                if (provider.isCategoriesError.value) {
-                  return const Center(
-                    child: Text(
-                      "Failed to load categories",
-                      style: TextStyle(color: Colors.red, fontSize: 16),
-                    ),
-                  );
-                }
-
-                final topics = provider.categories;
-
-                if (topics.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      "No categories available.",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  );
-                }
-
-                return ListView.builder(
-                  itemCount: filteredQuestions.length,
-                  itemBuilder: (context, index) {
-                    final topic = filteredQuestions[index];
-                    return TopicTileComponent(
-                      topic: Topic(
-                        catId: topic.catId,
-                        title: topic.name ?? 'Unnamed Topic',
-                        count: countUniqueQuestionsByCategory(
-                            provider.categoryQuestion,
-                            topic.catId ??
-                                0), // Replace with actual count if available
-                        imageUrl:
-                            "${AppImages.initialPath}${topic.image}", // Replace with actual URL if available
+    return Obx(
+      () => Scaffold(
+        backgroundColor: AppColors.getScaffoldBgColor(),
+        appBar: CustomAppBar(
+          title: "Bible Topics",
+          isShowSettingTrailing: true,
+          isShowInternetTrailing: true,
+        ),
+        // appBar: CustomAppBarTopics(title: title),
+        body: BodyContainerComponent(
+          child: Column(
+            children: [
+              // TextField(
+              //   controller: _searchController,
+              //   decoration: InputDecoration(
+              //     hintText: "Search questions...",
+              //     prefixIcon: const Icon(Icons.search),
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(15),
+              //     ),
+              //   ),
+              // ),
+              const Gap(10),
+              Expanded(
+                child: Obx(() {
+                  if (provider.isCategoriesLoading.value) {
+                    return const Center(
+                        child: CircularProgressIndicator.adaptive());
+                  }
+                  if (provider.isCategoriesError.value) {
+                    return const Center(
+                      child: Text(
+                        "Failed to load categories",
+                        style: TextStyle(color: Colors.red, fontSize: 16),
                       ),
                     );
-                  },
-                );
-              }),
-            ),
-          ],
+                  }
+
+                  final topics = provider.categories;
+
+                  if (topics.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "No categories available.",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    );
+                  }
+                  return ListView.builder(
+                    itemCount: filteredQuestions.length,
+                    itemBuilder: (context, index) {
+                      final topic = filteredQuestions[index];
+                      return TopicTileComponent(
+                        tileBgColor: themeController.isDarkMode.value
+                            ? AppColors.lightBlack
+                            : AppColors.white,
+                        topic: Topic(
+                          catId: topic.catId,
+                          title: topic.name ?? 'Unnamed Topic',
+                          count: countUniqueQuestionsByCategory(
+                              provider.categoryQuestion,
+                              topic.catId ??
+                                  0), // Replace with actual count if available
+                          imageUrl:
+                              "${AppImages.initialPath}${topic.image}", // Replace with actual URL if available
+                        ),
+                      );
+                    },
+                  );
+                }),
+              ),
+            ],
+          ),
         ),
       ),
     );
