@@ -1,14 +1,22 @@
 import 'package:bible_app/components/componets.dart';
 import 'package:bible_app/constants/app_colors.dart';
+import 'package:bible_app/utils/local_storage_util.dart';
 import 'package:bible_app/view_model/controllers/controllers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DarkModeController extends GetxController {
-  var selectedOption = 1.obs; // Default selection: OFF
+  var selectedOption = 1.obs;
 
   void setOption(int value) {
     selectedOption.value = value;
+    LocalStorageUtil.saveThemeModeOption(value);
+  }
+
+  @override
+  void onInit() async {
+    super.onInit();
+    selectedOption.value = await LocalStorageUtil.getThemeModeOption();
   }
 }
 
@@ -67,13 +75,22 @@ class DarkModeDialog {
                 // Apply the selected theme option
                 if (controller.selectedOption.value == 0) {
                   // Match device setting
-                  themeController.toggleTheme();
+                  final Brightness brightness =
+                      MediaQuery.of(Get.context!).platformBrightness;
+                  final bool isDark = brightness == Brightness.dark;
+                  if (themeController.isDarkMode.value != isDark) {
+                    themeController.toggleTheme();
+                  }
                 } else if (controller.selectedOption.value == 1) {
-                  // Light mode
-                  themeController.toggleTheme();
+                  // Light mode (OFF)
+                  if (themeController.isDarkMode.value) {
+                    themeController.toggleTheme();
+                  }
                 } else if (controller.selectedOption.value == 2) {
-                  // Dark mode
-                  themeController.toggleTheme();
+                  // Dark mode (ON)
+                  if (!themeController.isDarkMode.value) {
+                    themeController.toggleTheme();
+                  }
                 }
                 Get.back();
               },

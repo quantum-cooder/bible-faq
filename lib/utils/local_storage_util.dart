@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LocalStorageUtil {
   static const String _lastPromptDateKey = 'lastPromptDate';
   static const String _isDarkModeKey = 'isDarkMode';
+  static const String _themeModeOptionKey = 'themeModeOption';
 
   static Future<void> saveLastPromptDate(DateTime date) async {
     final prefs = await SharedPreferences.getInstance();
@@ -31,5 +32,15 @@ class LocalStorageUtil {
   static Future<bool> getTheme() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_isDarkModeKey) ?? false;
+  }
+
+  static Future<void> saveThemeModeOption(int option) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_themeModeOptionKey, option);
+  }
+
+  static Future<int> getThemeModeOption() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_themeModeOptionKey) ?? 1; // Default to OFF (1)
   }
 }

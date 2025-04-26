@@ -17,17 +17,40 @@ void launchURL(String url) async {
 }
 
 Future<void> launchEmail(String emailAddress, {String subject = ''}) async {
-  final Uri emailUri = Uri(
-    scheme: 'mailto',
-    path: emailAddress,
-    query:
-        subject.isNotEmpty ? 'Subject=${Uri.encodeComponent(subject)}' : null,
-  );
+  try {
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: emailAddress,
+      query:
+          subject.isNotEmpty ? 'subject=${Uri.encodeComponent(subject)}' : null,
+    );
 
-  if (await canLaunchUrl(emailUri)) {
-    await launchUrl(emailUri);
-  } else {
-    Get.snackbar("Error", "Could not open email client.");
+    if (await canLaunchUrl(emailUri)) {
+      await launchUrl(
+        emailUri,
+        mode: LaunchMode.externalApplication,
+        webViewConfiguration: const WebViewConfiguration(
+          enableJavaScript: true,
+          enableDomStorage: true,
+        ),
+      );
+    } else {
+      // Fallback method for devices that might not handle the mailto scheme properly
+      String fallbackUrl = 'mailto:$emailAddress';
+      if (subject.isNotEmpty) {
+        fallbackUrl += '?subject=${Uri.encodeComponent(subject)}';
+      }
+
+      final fallbackUri = Uri.parse(fallbackUrl);
+      if (await canLaunchUrl(fallbackUri)) {
+        await launchUrl(fallbackUri);
+      } else {
+        Get.snackbar("Error",
+            "Could not open email client. Please manually send an email to $emailAddress");
+      }
+    }
+  } catch (e) {
+    Get.snackbar("Error", "Could not open email client: ${e.toString()}");
   }
 }
 

@@ -161,7 +161,7 @@ class SettingScreen extends StatelessWidget {
                         },
                       ),
                       menuItem(
-                        icon: AppSvgIcons.mailAtSign,
+                        icon: AppSvgIcons.code,
                         label: Obx(() => Text(
                             'App Version ${appInfoController.appVersion} (${appInfoController.buildNumber})')),
                         isShowDivider: false,
